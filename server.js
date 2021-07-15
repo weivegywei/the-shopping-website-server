@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const app = express();
 const mongoose = require('mongoose');
-const mongodbUrl = 'mongodb://127.0.0.1:27017';
+const mongodbUrl = 'mongodb+srv://user_001:userPasswordForUser001@cluster0.cpgej.mongodb.net/test?retryWrites=true&w=majority';
 const { registerRoute } = require('./Register/route');
 const { createProductRoute, adjustProductInventory} = require('./product/create/route');
 const { listProductRoute, deleteProductRoute } = require('./product/list/route');
