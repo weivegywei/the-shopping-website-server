@@ -1,4 +1,4 @@
-import { User } from "../../server/Register/schema";
+import { User } from "../register/schema";
 import jwt_decode from "jwt-decode";
 
 export const getUserRoute = (app) => app.post('/api/user', async(req, res) => {

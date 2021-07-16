@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-const { User } = require('../Register/schema');
+const { User } = require('../register/schema');
 
 const accessTokenSecret = 'togetherwefightpoverty';
 
