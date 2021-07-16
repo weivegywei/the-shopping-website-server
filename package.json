@@ -50,9 +50,13 @@
     "start:old": "node server.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "build": "webpack",
     "start": "nodemon --exec node_modules/.bin/babel-node server.js",
+    "start:dev": "pm2 --exec node_modules/.bin/babel-node server.js",
+    "start:dev2": "pm2-runtime start ecosystem.config.js --env production",
     "migrate:up": "migrate-mongo up",
-    "migrate:down": "migrate-mongo down"
+    "migrate:down": "migrate-mongo down",
+    "server": "babel-node ./server.js"
   },
   "eslintConfig": {
     "extends": [

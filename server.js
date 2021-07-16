@@ -18,6 +18,8 @@ const { listFilteredProductRoute, getFiltersRoute } = require('./product/filter/
 const { paypalRoute, storePaymentRoute } = require('./paypal/route');
 const { listOrderRoute, editOrderStatusRoute, getOrderInfoRoute } = require('./order/route');
 const { editProductRoute } = require('./product/edit/route');
+//require('babel-register');
+//require('./server.es6');
 
 app.use(cors())
 
@@ -27,7 +29,7 @@ app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
-app.listen(process.env.PORT || 8080, () => {console.log('running my server')});
+app.listen(process.env.PORT || 5000, () => {console.log('running my server')});
 
 mongoose.connect(mongodbUrl, {useNewUrlParser: true, useUnifiedTopology: true}).then(() => {
     console.log("mongodb connected")
