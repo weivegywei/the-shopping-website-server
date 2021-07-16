@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const app = express();
+const cors = require('cors')
 const mongoose = require('mongoose');
 const mongodbUrl = 'mongodb+srv://user_001:userPasswordForUser001@cluster0.cpgej.mongodb.net/test?retryWrites=true&w=majority';
 const { registerRoute } = require('./register/route');
@@ -17,6 +18,8 @@ const { listFilteredProductRoute, getFiltersRoute } = require('./product/filter/
 const { paypalRoute, storePaymentRoute } = require('./paypal/route');
 const { listOrderRoute, editOrderStatusRoute, getOrderInfoRoute } = require('./order/route');
 const { editProductRoute } = require('./product/edit/route');
+
+app.use(cors())
 
 app.use(express.static(path.join(__dirname, 'build')));
 
