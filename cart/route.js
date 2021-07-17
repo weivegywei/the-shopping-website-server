@@ -1,4 +1,3 @@
-import { Product } from "../product/create/schema";
 import { Cart } from "./schema";
 
 const saveNewCart = async (userId) => {

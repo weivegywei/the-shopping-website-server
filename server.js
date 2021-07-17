@@ -4,7 +4,7 @@ const path = require('path');
 const app = express();
 const cors = require('cors')
 const mongoose = require('mongoose');
-const mongodbUrl = 'mongodb+srv://user_001:userPasswordForUser001@cluster0.cpgej.mongodb.net/test?retryWrites=true&w=majority';
+const mongodbUrl = 'mongodb+srv://user_001:userPasswordForUser001@cluster0.cpgej.mongodb.net/ShoppingWebsite?retryWrites=true&w=majority';
 const { registerRoute } = require('./register/route');
 const { createProductRoute, adjustProductInventory} = require('./product/create/route');
 const { listProductRoute, deleteProductRoute } = require('./product/list/route');
@@ -29,7 +29,7 @@ app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
-app.listen(process.env.PORT || 80, () => {console.log('running my server')});
+app.listen(process.env.PORT || 80, () => {console.log('running my remote server')});
 
 mongoose.connect(mongodbUrl, {useNewUrlParser: true, useUnifiedTopology: true}).then(() => {
     console.log("mongodb connected")

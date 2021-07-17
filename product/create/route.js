@@ -23,12 +23,14 @@ const saveNewProduct = ({name, manufacturerId, price, imageUrl, availability, in
     };
 
 export const createProductRoute = (app) => app.post('/api/admin/product/create', async(req, res) => {
+    const abc = await Manufacturer.find().exec();
     const existingManufacturer = await Manufacturer.findOne({name: req.body.manufacturerName}).exec();
     if (existingManufacturer) {
         const {name, price, imageUrl, availability, inventory, 
             specification, specificationDescr, description, packageSize, category} = req.body;
         const productObject = await saveNewProduct({name, price, imageUrl, availability, inventory, 
-            specification, specificationDescr, description, packageSize, category, manufacturerId: existingManufacturer._id});
+            specification, specificationDescr, description, packageSize, category, 
+            manufacturerId: existingManufacturer._id});
         return res.send(productObject);
     } else {
         res.status(400);
