@@ -11,7 +11,6 @@ export const editProductRoute = (app) => app.post('/api/admin/product/edit', asy
             { $set: { name, manufacturerId: existingManufacturer._id, inventory, price, imageUrl, availability, 
                 specification, specificationDescr, description, packageSize, category} }
         )
-        console.log('editedProduct', editedProduct);
         return res.send('Product updated');
     } else {
         res.status(400);

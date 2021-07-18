@@ -34,7 +34,6 @@ export const getCartRoute = (app) => app.post('/api/cart/get', async(req, res) =
         }
     }
 ]).exec();
-console.log('a', a);
     const cartItemsUserSpecArr = a[0].cartItems;
     const cartItemsFullInfoArr = a[0].items;
     const cartItemsArr = cartItemsUserSpecArr.map(item => ({...cartItemsFullInfoArr.find(it => it._id.toString() === item.productId.toString()), ...item}));

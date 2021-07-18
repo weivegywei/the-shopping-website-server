@@ -31,4 +31,13 @@ export const listFilteredProductRoute = (app) => app.post('/api/product/filter/r
     } else {return res.json(filteredProduct)}
 });
 
-
+export const listMenuFilteredProductRoute = (app) => app.post('/api/product/menu/result', async(req, res) => {
+    const menuFilter = req.body.menuCategory
+    const filteredProduct = await Product.find({
+        'category': { $in: menuFilter }
+    });
+    if (filteredProduct.length == 0) {
+        const allProduct = await Product.find().exec()
+        return res.json(allProduct)
+    } else {return res.json(filteredProduct)}
+}) 

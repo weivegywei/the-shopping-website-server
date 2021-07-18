@@ -14,12 +14,10 @@ const { getUserRoute } = require('./store/route');
 const { getCartRoute, addCartItem, deleteCartItem, getCartItemNumberRoute, changeItemNumber, changeCartStatus } = require('./cart/route');
 const { createManufacturerRoute } = require('./manufacturer/route');
 const { homepageProductSearchRoute } = require('./homepage/searchRoute');
-const { listFilteredProductRoute, getFiltersRoute } = require('./product/filter/route');
+const { listFilteredProductRoute, getFiltersRoute, listMenuFilteredProductRoute } = require('./product/filter/route');
 const { paypalRoute, storePaymentRoute } = require('./paypal/route');
 const { listOrderRoute, editOrderStatusRoute, getOrderInfoRoute } = require('./order/route');
 const { editProductRoute } = require('./product/edit/route');
-//require('babel-register');
-//require('./server.es6');
 
 app.use(cors())
 
@@ -29,7 +27,7 @@ app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
-app.listen(process.env.PORT || 80, () => {console.log('running my remote server')});
+app.listen(process.env.PORT || 80, () => {console.log('running my server')});
 
 mongoose.connect(mongodbUrl, {useNewUrlParser: true, useUnifiedTopology: true}).then(() => {
     console.log("mongodb connected")
@@ -85,3 +83,5 @@ editOrderStatusRoute(app);
 getOrderInfoRoute(app);
 
 editProductRoute(app);
+
+listMenuFilteredProductRoute(app);

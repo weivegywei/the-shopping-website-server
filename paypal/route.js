@@ -34,7 +34,6 @@ export const paypalRoute = (app) => app.post('/api/create-payment', async (req, 
         }, 
         json: true
     });
-    console.log('await data', data);
       res.json({
           id: data.id
       })
@@ -48,7 +47,6 @@ export const paypalRoute = (app) => app.post('/api/create-payment', async (req, 
   const paymentID = req.body.paymentID;
   const payerID = req.body.payerID;
   const totalAmount = req.body.totalAmount;
-  console.log(req.body, 'reqbody');
   request.post(paypalApi + '/v1/payments/payment/' + paymentID + '/execute', {
     auth:{
       user: clientId,

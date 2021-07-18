@@ -18,7 +18,6 @@ export const listOrderRoute = (app) => app.get('/api/admin/order/list', async(re
 
 export const getOrderInfoRoute = (app) => app.post('/api/admin/order/info', async(req, res) => {
     const order = await Cart.findOne({_id: req.body.cartId});
-    //console.log(order, 'order');
     const a = await Cart.aggregate([
         { $match: { _id : mongoose.Types.ObjectId(req.body.cartId) } },
         {
@@ -42,13 +41,10 @@ export const getOrderInfoRoute = (app) => app.post('/api/admin/order/info', asyn
         }
     ]).exec();
     const orderItems = order.cartItems;
-    //console.log(orderItems, '111111111111');
     const orderItemsInfo = a[0].items;
-    //console.log(orderItemsInfo, '22222222222');
     const orderInfo = orderItems.map(item => (
         {...orderItemsInfo.find(it => it._id.toString() === item.productId.toString()), ...item}
         ));
-    //console.log('orderInfo', orderInfo);
     return res.json(orderInfo);
 })
 
