@@ -51,7 +51,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "build": "webpack",
-    "start:dev": "nodemon --exec babel-node server.js",
+    "start:dev": "PORT=8080 nodemon --exec babel-node server.js",
     "start": "npm install babel-node @babel/node -g && node_modules/.bin/pm2-runtime --interpreter babel-node server.js -f",
     "migrate:up": "migrate-mongo up",
     "migrate:down": "migrate-mongo down",

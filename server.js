@@ -27,7 +27,7 @@ app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
-app.listen(process.env.PORT || 80, () => {console.log('running my server')});
+app.listen(process.env.PORT || 80, () => {console.log('running my server on ', process.env.PORT)});
 
 mongoose.connect(mongodbUrl, {useNewUrlParser: true, useUnifiedTopology: true}).then(() => {
     console.log("mongodb connected")
