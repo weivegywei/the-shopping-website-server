@@ -18,3 +18,4 @@ export const deleteProductRoute = (app) => app.post('/api/admin/product/delete',
     await Product.findOneAndDelete({_id: req.body.productId}).exec();
     return res.send('product deleted')
 })
+

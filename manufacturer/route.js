@@ -18,3 +18,4 @@ export const createManufacturerRoute = (app) => app.post('/api/admin/manufacture
         return res.json({error})
     }
 });
+
