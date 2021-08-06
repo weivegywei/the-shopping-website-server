@@ -19,6 +19,7 @@ const { paypalRoute, storePaymentRoute } = require('./paypal/route');
 const { listOrderRoute, editOrderStatusRoute, getOrderInfoRoute } = require('./order/route');
 const { editProductRoute } = require('./product/edit/route');
 const { fetchManufacturerNameRoute } = require('./product/page/route');
+const { getRuleBookRoute } = require('./rulebook/route');
 
 app.use(cors())
 
@@ -88,3 +89,5 @@ editProductRoute(app);
 listMenuFilteredProductRoute(app);
 
 fetchManufacturerNameRoute(app);
+
+getRuleBookRoute(app);
