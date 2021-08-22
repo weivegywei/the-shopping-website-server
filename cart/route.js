@@ -40,7 +40,7 @@ export const getCartRoute = (app) => app.post('/api/cart/get', async(req, res) =
     return res.json(cartItemsArr)
 });
 
-export const addCartItem = (app) => app.post('/api/cart', async(req, res) => {
+export const addCartItem = (app) => app.post('/api/cart/add', async(req, res) => {
     const {userId, productId, specificationValue, quantity} = req.body;
     const userCart = await getOrCreateCart(userId);
     const newItem = {productId, specificationValue, quantity};

@@ -9,7 +9,6 @@ const paypalApi = 'https://api-m.sandbox.paypal.com';
 // Set up the payment:
   // 1. Set up a URL to handle requests from the PayPal button
 export const paypalRoute = (app) => app.post('/api/create-payment', async (req, res) => {
-  console.log(req.body, 'reqbody')
     // 2. Call /v1/payments/payment to set up the payment
     try {
       const data = await request.post(paypalApi + '/v1/payments/payment', {
