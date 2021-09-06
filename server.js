@@ -12,6 +12,7 @@ const { homepageProductRoute } = require('./homepage/route');
 const { loginAuthenticationRoute } = require('./login/auth');
 const { getUserRoute } = require('./store/route');
 const { getCartRoute, addCartItem, deleteCartItem, getCartItemNumberRoute, changeItemNumber, changeCartStatus } = require('./cart/route');
+const { addGuestCartItem, getGuestCartItemNumberRoute, getGuestCartRoute, deleteGuestCartItem, changeGuestCartItemNumber } = require('./guest/route');
 const { createManufacturerRoute } = require('./manufacturer/route');
 const { homepageProductSearchRoute } = require('./homepage/searchRoute');
 const { listFilteredProductRoute, getFiltersRoute, listMenuFilteredProductRoute } = require('./product/filter/route');
@@ -20,6 +21,7 @@ const { listOrderRoute, editOrderStatusRoute, getOrderInfoRoute } = require('./o
 const { editProductRoute } = require('./product/edit/route');
 const { fetchManufacturerNameRoute } = require('./product/page/route');
 const { getRuleBookRoute } = require('./rulebook/route');
+import { cleanGuestCartCron } from './cron';
 
 app.use(cors())
 
@@ -34,6 +36,8 @@ app.listen(process.env.PORT || 80, () => {console.log('running my server on ', p
 mongoose.connect(mongodbUrl, {useNewUrlParser: true, useUnifiedTopology: true}).then(() => {
     console.log("mongodb connected")
 });
+
+cleanGuestCartCron.start()
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -91,3 +95,14 @@ listMenuFilteredProductRoute(app);
 fetchManufacturerNameRoute(app);
 
 getRuleBookRoute(app);
+
+addGuestCartItem(app);
+
+getGuestCartItemNumberRoute(app);
+
+getGuestCartRoute(app);
+
+deleteGuestCartItem(app);
+
+changeGuestCartItemNumber(app);
+

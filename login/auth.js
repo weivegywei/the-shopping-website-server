@@ -12,11 +12,10 @@ export const loginAuthenticationRoute = (app) => app.post('/api/login', async (r
 
     // Filter user from the users collection by email and hashed password
     const user = await User.findOne({ email, password: hashedPassword }).exec();
-
     if (user) {
+        console.log(user, 'user');
         // Generate an access token
-        const accessToken = jwt.sign({ email: user.email,  role: user.role }, accessTokenSecret);
-
+        const accessToken = jwt.sign({ email: user.email,  role: user.role, id: user._id }, accessTokenSecret);
         res.json({
             accessToken
         });

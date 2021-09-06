@@ -29,6 +29,7 @@
     "mobx-react": "^7.1.0",
     "mongodb": "3.6.4",
     "mongoose": "^5.0.0",
+    "node-cron": "^3.0.0",
     "node-sass": "^6.0.0",
     "pm2": "^5.1.0",
     "react": "^17.0.1",

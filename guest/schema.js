@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
-const cartSchema = new mongoose.Schema({
-    userId: {type: String, required: true},
+const guestCartSchema = new mongoose.Schema({
+    guestId: {type: String, required: true, unique: true},
     status: {type: String, required: true, enum: [ 'active', 'closed' ]},
     cartItems: [{
       productId: {type: String, required: true}, 
@@ -9,6 +9,7 @@ const cartSchema = new mongoose.Schema({
       quantity: {type: Number, required: true}
     }],
     coupons: [String]
-  });
+  },
+  {timestamps: true});
 
-export const Cart = mongoose.model('Cart', cartSchema);
+export const GuestCart = mongoose.model('GuestCart', guestCartSchema);

@@ -10,9 +10,19 @@ const saveNewCart = async (userId) => {
     return await cart.save();
 };
 
+const getOrCreateCart = async(userId) => {
+    const userCart = await Cart.findOne({userId, status: 'active'});
+    if (userCart) {
+        return userCart;
+    } else if (!userCart) {
+        const newCart = await saveNewCart(userId);
+        return newCart;
+    }
+}
+
 export const getCartRoute = (app) => app.post('/api/cart/get', async(req, res) => {
-    //const data = await getOrCreateCart(req.body.userId);
-    const a = await Cart.aggregate([
+    const cartItemsObj = await Cart.aggregate([
+//add one new field, map through cartItems to extract all productIds, then put in this new field
     {
         $addFields: {
             "cartItems.prodId": {
@@ -24,8 +34,10 @@ export const getCartRoute = (app) => app.post('/api/cart/get', async(req, res) =
             },
         }
     },
+//find matching cart with userId and 'active' status
     { $match : { $and: [ { userId : req.body.userId }, { status: 'active' } ] } },
     {
+//lookup from products collection according to productIds from new field, add all info of products found
         $lookup: {
             from: 'products',
             localField: 'cartItems.prodId',
@@ -34,9 +46,11 @@ export const getCartRoute = (app) => app.post('/api/cart/get', async(req, res) =
         }
     }
 ]).exec();
-    const cartItemsUserSpecArr = a[0].cartItems;
-    const cartItemsFullInfoArr = a[0].items;
-    const cartItemsArr = cartItemsUserSpecArr.map(item => ({...cartItemsFullInfoArr.find(it => it._id.toString() === item.productId.toString()), ...item}));
+    const cartItemsUserSpecArr = cartItemsObj[0].cartItems;
+    const cartItemsFullInfoArr = cartItemsObj[0].items;
+    const cartItemsArr = cartItemsUserSpecArr.map(item => 
+        ({...cartItemsFullInfoArr.find(it => it._id.toString() === item.productId.toString()), ...item})
+    );
     return res.json(cartItemsArr)
 });
 
@@ -85,12 +99,3 @@ export const changeCartStatus = (app) => app.post('/api/cart/status', async(req,
     return res.send('Cart status changed')
 });
 
-const getOrCreateCart = async(userId) => {
-    const userCart = await Cart.findOne({userId, status: 'active'});
-    if (userCart) {
-        return userCart;
-    } else if (!userCart) {
-        const newCart = await saveNewCart(userId);
-        return newCart;
-    }
-}
