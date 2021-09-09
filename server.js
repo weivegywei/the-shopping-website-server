@@ -12,11 +12,11 @@ const { homepageProductRoute } = require('./homepage/route');
 const { loginAuthenticationRoute } = require('./login/auth');
 const { getUserRoute } = require('./store/route');
 const { getCartRoute, addCartItem, deleteCartItem, getCartItemNumberRoute, changeItemNumber, changeCartStatus } = require('./cart/route');
-const { addGuestCartItem, getGuestCartItemNumberRoute, getGuestCartRoute, deleteGuestCartItem, changeGuestCartItemNumber } = require('./guest/route');
+const { addGuestCartItem, getGuestCartItemNumberRoute, getGuestCartRoute, deleteGuestCartItem, changeGuestCartItemNumber, changeGuestCartStatus } = require('./guest/route');
 const { createManufacturerRoute } = require('./manufacturer/route');
 const { homepageProductSearchRoute } = require('./homepage/searchRoute');
 const { listFilteredProductRoute, getFiltersRoute, listMenuFilteredProductRoute } = require('./product/filter/route');
-const { paypalRoute, storePaymentRoute } = require('./paypal/route');
+const { paypalRoute, storePaymentRoute, storeGuestPaymentRoute } = require('./paypal/route');
 const { listOrderRoute, editOrderStatusRoute, getOrderInfoRoute } = require('./order/route');
 const { editProductRoute } = require('./product/edit/route');
 const { fetchManufacturerNameRoute } = require('./product/page/route');
@@ -105,4 +105,8 @@ getGuestCartRoute(app);
 deleteGuestCartItem(app);
 
 changeGuestCartItemNumber(app);
+
+changeGuestCartStatus(app);
+
+storeGuestPaymentRoute(app);
 

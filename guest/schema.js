@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const guestCartSchema = new mongoose.Schema({
-    guestId: {type: String, required: true, unique: true},
+    guestId: {type: String, required: true},
     status: {type: String, required: true, enum: [ 'active', 'closed' ]},
     cartItems: [{
       productId: {type: String, required: true}, 

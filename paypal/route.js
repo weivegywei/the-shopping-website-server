@@ -1,6 +1,8 @@
 import request from 'request-promise';
 import { Cart } from '../cart/schema';
+import { GuestCart } from '../guest/schema'
 import { Payment } from './paymentSchema';
+import { GuestPayment } from './paymentSchema';
 
 const clientId = 'AZxNMuwqAKbWvLmuSpYo4Crw2E_eCKH_U1ufS5UL7vObX38rYdJqgyOHIvzmqDHLVnv0Yz67EJFhOE9R';
 const secret = 'ELjY6Glqx2L6BE-SCc_0JRqoPzAUeqiiUqs0_9akc-TNU6TeLGJxJoY40HDTr6iRdQTOAzx_GO02D7Ml';
@@ -92,6 +94,20 @@ const saveNewPayment = ({userId, cartId, orderId, payerId, paymentId, amount, cu
   return newPayment.save()
 };
 
+const saveNewGuestPayment = ({guestId, cartId, orderId, payerId, paymentId, amount, currency, status}) => {
+  const newGuestPayment = new GuestPayment({
+    guestId,
+    cartId,
+    orderId,
+    payerId,
+    paymentId,
+    amount,
+    currency,
+    status
+  });
+  return newGuestPayment.save()
+};
+
 export const storePaymentRoute = (app) => app.post('/api/store-payment', async(req, res) => {
   const {userId, orderId, payerId, paymentId, amount, currency} = req.body;
   const cartPaid = await Cart.findOne({userId, status: 'active'});
@@ -99,5 +115,20 @@ export const storePaymentRoute = (app) => app.post('/api/store-payment', async(r
   const newEventObject = {'status': 'paid', 'time': paymentObject.createdAt};
   paymentObject.events.push(newEventObject);
   paymentObject.save();
+  return res.send(paymentObject);
+})
+
+export const storeGuestPaymentRoute = (app) => app.post('/api/store-guest-payment', async(req, res) => {
+  const {guestId, orderId, payerId, paymentId, amount, currency} = req.body;
+  console.log(req.body, 'reqbody');
+  const cartPaid = await GuestCart.findOne({guestId, status: 'active'});
+  console.log(cartPaid, 'cartPaid');
+  const paymentObject = await saveNewGuestPayment({guestId, cartId: cartPaid._id, orderId, payerId, paymentId, amount, currency, status: 'paid'});
+  console.log(paymentObject, 'paymentObject')
+  const newEventObject = {'status': 'paid', 'time': paymentObject.createdAt};
+  console.log(newEventObject,'newEventObject')
+  paymentObject.events.push(newEventObject);
+  paymentObject.save();
+  console.log(paymentObject, 'paymentObject')
   return res.send(paymentObject);
 })

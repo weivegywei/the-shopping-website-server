@@ -36,9 +36,15 @@ export const addGuestCartItem = (app) => app.post('/api/guestcart/add', async(re
 });
 
 export const getGuestCartItemNumberRoute = (app) => app.post('/api/guestcart/number', async(req, res) => {
-    const guestCart = await getOrCreateGuestCart(req.body.guestId);
-    const guestCartItemNum = guestCart.cartItems.reduce((a,b) => a + b.quantity, 0);
-    return res.json(guestCartItemNum)
+    try {
+        const guestCart = await getOrCreateGuestCart(req.body.guestId);
+        const guestCartItemNum = guestCart.cartItems.reduce((a,b) => a + b.quantity, 0);
+        return res.json(guestCartItemNum)
+    } catch (error) {
+        res.status(400)
+        return res.json({error})
+    }
+    
 });
 
 export const getGuestCartRoute = (app) => app.post('/api/guestcart/get', async(req, res) => {
@@ -89,5 +95,13 @@ export const changeGuestCartItemNumber = (app) => app.post('/api/guestcart/chang
         { guestId, status: 'active', 'cartItems._id': cartItemId },
         { $set: { 'cartItems.$.quantity': quantity } });
     return res.send('Item quantity changed')
+});
+
+export const changeGuestCartStatus = (app) => app.post('/api/guestcart/status', async(req, res) => {
+    const guestCart = await GuestCart.updateOne(
+        { guestId: req.body.guestId, status: 'active' }, 
+        { $set: { 'status': 'closed'} }
+    );
+    return res.send('Cart status changed')
 });
 

@@ -12,7 +12,6 @@ const objectIdWithTimestamp = (timestamp) => {
 
     /* Create an ObjectId with that hex timestamp */
     var constructedObjectId = mongoose.Types.ObjectId(hexSeconds + "0000000000000000");
-
     return constructedObjectId
 }
 
@@ -23,9 +22,9 @@ const clearOutdatedGuestCart = async() => {
     return res.json(clearGuestCart)
 }
 
-export const cleanGuestCartCron = new CronJob('* * */2 * *', function() {
+export const cleanGuestCartCron = new CronJob('* * 1,16 * *', function() {
     console.log('---------------------');
-    console.log('Clean guest carts in database every two weeks.');
+    console.log('Clean older than one month active guest carts in database every two weeks.');
     clearOutdatedGuestCart();
 }, null, true);
 
