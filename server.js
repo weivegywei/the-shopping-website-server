@@ -17,7 +17,7 @@ const { createManufacturerRoute } = require('./manufacturer/route');
 const { homepageProductSearchRoute } = require('./homepage/searchRoute');
 const { listFilteredProductRoute, getFiltersRoute, listMenuFilteredProductRoute } = require('./product/filter/route');
 const { paypalRoute, storePaymentRoute, storeGuestPaymentRoute } = require('./paypal/route');
-const { listOrderRoute, editOrderStatusRoute, getOrderInfoRoute } = require('./order/route');
+const { listOrderRoute, editOrderStatusRoute, getOrderInfoRoute, listGuestOrderRoute } = require('./order/route');
 const { editProductRoute } = require('./product/edit/route');
 const { fetchManufacturerNameRoute } = require('./product/page/route');
 const { getRuleBookRoute } = require('./rulebook/route');
@@ -109,4 +109,7 @@ changeGuestCartItemNumber(app);
 changeGuestCartStatus(app);
 
 storeGuestPaymentRoute(app);
+
+listGuestOrderRoute(app);
+
 
