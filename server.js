@@ -37,7 +37,7 @@ mongoose.connect(mongodbUrl, {useNewUrlParser: true, useUnifiedTopology: true}).
     console.log("mongodb connected")
 });
 
-cleanGuestCartCron.start()
+cleanGuestCartCron.start();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
