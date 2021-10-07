@@ -25,10 +25,11 @@ export const listFilteredProductRoute = (app) => app.post('/api/product/filter/r
          {'price': priceFilterMin !== 0 ? { $gte: priceFilterMin } : {$nin: []}},
          {'price': priceFilterMax !== 0 ? { $lte: priceFilterMax } : {$nin: []}}
     ]});
-    if (filteredProduct.length == 0) {
+    /* if (filteredProduct.length == 0) {
         const allProduct = await Product.find().exec()
         return res.json(allProduct)
-    } else {return res.json(filteredProduct)}
+    } else {return res.json(filteredProduct)} */
+    return res.json(filteredProduct)
 });
 
 export const listMenuFilteredProductRoute = (app) => app.post('/api/product/menu/result', async(req, res) => {

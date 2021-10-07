@@ -21,6 +21,7 @@ const { listOrderRoute, editOrderStatusRoute, getOrderInfoRoute, listGuestOrderR
 const { editProductRoute } = require('./product/edit/route');
 const { fetchManufacturerNameRoute } = require('./product/page/route');
 const { getRuleBookRoute } = require('./rulebook/route');
+const { addWishlistItem, getWishlistItemNumber, getWishlistRoute, deleteListItem } = require('./wishlist/route');
 import { cleanGuestCartCron } from './cron';
 
 app.use(cors())
@@ -112,4 +113,11 @@ storeGuestPaymentRoute(app);
 
 listGuestOrderRoute(app);
 
+addWishlistItem(app);
+
+getWishlistItemNumber(app);
+
+getWishlistRoute(app);
+
+deleteListItem(app)
 
