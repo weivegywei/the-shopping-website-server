@@ -96,6 +96,6 @@ export const changeCartStatus = (app) => app.post('/api/cart/status', async(req,
         { userId: req.body.userId, status: 'active' }, 
         { $set: { 'status': 'closed'} }
     );
-    return res.send('Cart status changed')
+    return res.json(userCart)
 });
 

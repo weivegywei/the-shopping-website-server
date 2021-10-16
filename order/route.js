@@ -2,6 +2,7 @@ import { Payment } from "../paypal/paymentSchema";
 import { GuestPayment } from '../paypal/paymentSchema';
 import { Cart } from '../cart/schema';
 import { GuestCart } from '../guest/schema'
+import { transporter } from '../server'
 
 const mongoose = require('mongoose');
 
@@ -101,7 +102,17 @@ export const editOrderStatusRoute = (app) => app.post('/api/admin/order/edit', a
             );
         const paymentObject = await Payment.findOne({_id: req.body.id});
         paymentObject.events.push(newEventObject);
+        console.log(paymentObject.email, 'email')
         paymentObject.save();
+        transporter.sendMail({
+            from: '"My Wei Shop" <myweishopofficial@gmail.com>', // sender address
+            to: `${paymentObject.email}, weivegy.wei@gmail.com`, // list of receivers
+            subject: `Your order has been ${req.body.status}`, // Subject line
+            text: `Your order has been ${req.body.status}, thank you for shopping with us.`, // plain text body
+            html: `<p>Your order has been <b>${req.body.status}</b>, thank you for shopping with us.</p>`, // html body
+          }).then(info => {
+            console.log({info});
+          }).catch(console.error);
         return res.send(paymentObject);
     }
 });

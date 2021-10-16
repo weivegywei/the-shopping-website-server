@@ -5,7 +5,7 @@ const app = express();
 const cors = require('cors')
 const mongoose = require('mongoose');
 const mongodbUrl = 'mongodb+srv://user_001:userPasswordForUser001@cluster0.cpgej.mongodb.net/ShoppingWebsite?retryWrites=true&w=majority';
-const { registerRoute } = require('./register/route');
+const { registerRoute, registerGuestRoute } = require('./register/route');
 const { createProductRoute, adjustProductInventory} = require('./product/create/route');
 const { listProductRoute, deleteProductRoute } = require('./product/list/route');
 const { homepageProductRoute } = require('./homepage/route');
@@ -23,6 +23,7 @@ const { fetchManufacturerNameRoute } = require('./product/page/route');
 const { getRuleBookRoute } = require('./rulebook/route');
 const { addWishlistItem, getWishlistItemNumber, getWishlistRoute, deleteListItem } = require('./wishlist/route');
 import { cleanGuestCartCron } from './cron';
+const nodemailer = require('nodemailer');
 
 app.use(cors())
 
@@ -38,6 +39,26 @@ mongoose.connect(mongodbUrl, {useNewUrlParser: true, useUnifiedTopology: true}).
     console.log("mongodb connected")
 });
 
+ export const transporter = nodemailer.createTransport({
+  host: 'smtp.gmail.com',
+  port: 587,
+  service: 'gmail',
+  auth: {
+    user: 'myweishopofficial@gmail.com',
+    pass: 'uitpoomigognkbqe',
+  },
+});
+transporter.verify().then(console.log).catch(console.error);
+/* transporter.sendMail({
+  from: '"My Wei Shop" <myweishopofficial@gmail.com>', // sender address
+  to: "weivegy.wei@gmail.com, tica_bh@hotmail.com", // list of receivers
+  subject: "", // Subject line
+  text: "", // plain text body
+  html: "<b></b>", // html body
+}).then(info => {
+  console.log({info});
+}).catch(console.error);
+ */
 cleanGuestCartCron.start();
 
 app.use(bodyParser.json());
@@ -119,5 +140,7 @@ getWishlistItemNumber(app);
 
 getWishlistRoute(app);
 
-deleteListItem(app)
+deleteListItem(app);
+
+registerGuestRoute(app);
 

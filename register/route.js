@@ -1,7 +1,8 @@
 const crypto = require('crypto');
-const {User} = require('./schema');
+const { User } = require('./schema');
 
-const saveNewUser = (firstName, lastName, email, password, address, country, role) => {
+
+const saveNewUser = (firstName, lastName, email, password, address, country, role, type) => {
     const newUser = new User({
         firstName,
         lastName,
@@ -9,16 +10,18 @@ const saveNewUser = (firstName, lastName, email, password, address, country, rol
         password,
         address,
         country,
-        role
+        role,
+        type
     });
     return newUser.save()
 }
 
 export const registerRoute = (app) => app.post('/api/register', async(req, res) => {
     try {
-    const hashedPassword = crypto.createHash('md5').update(req.body.password).digest('hex');
-    const UserObject = await saveNewUser(req.body.firstName, req.body.lastName, req.body.email, hashedPassword, 
-        req.body.address, req.body.country, req.body.role);
+    const { firstName, lastName, email, address, password, country, role, type } = req.body;
+    const hashedPassword = crypto.createHash('md5').update(password).digest('hex');
+    const UserObject = await saveNewUser( firstName, lastName, email, hashedPassword, address, 
+        country, role, type );
     return res.json(UserObject)
     }
     catch(error) {
@@ -29,3 +32,29 @@ export const registerRoute = (app) => app.post('/api/register', async(req, res) 
         return res.json({error})
     }
 })
+
+export const registerGuestRoute = (app) => app.post('/api/guestregister', async(req, res) => {
+    try {
+        const { _id, firstName, lastName, email, address, country, role, type } = req.body;
+        const newUser = new User({
+            _id,
+            firstName,
+            lastName,
+            email,
+            password: null,
+            address,
+            country,
+            role,
+            type
+        });
+        console.log('newus', newUser);
+        newUser.save()
+        return res.json(newUser)
+    }
+    catch(error) {
+        console.log('guest register error', error);
+        res.status(400);
+        return res.json({error})
+    }
+})
+

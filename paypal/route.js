@@ -120,15 +120,10 @@ export const storePaymentRoute = (app) => app.post('/api/store-payment', async(r
 
 export const storeGuestPaymentRoute = (app) => app.post('/api/store-guest-payment', async(req, res) => {
   const {guestId, orderId, payerId, paymentId, amount, currency} = req.body;
-  console.log(req.body, 'reqbody');
   const cartPaid = await GuestCart.findOne({guestId, status: 'active'});
-  console.log(cartPaid, 'cartPaid');
   const paymentObject = await saveNewGuestPayment({guestId, cartId: cartPaid._id, orderId, payerId, paymentId, amount, currency, status: 'paid'});
-  console.log(paymentObject, 'paymentObject')
   const newEventObject = {'status': 'paid', 'time': paymentObject.createdAt};
-  console.log(newEventObject,'newEventObject')
   paymentObject.events.push(newEventObject);
   paymentObject.save();
-  console.log(paymentObject, 'paymentObject')
   return res.send(paymentObject);
 })

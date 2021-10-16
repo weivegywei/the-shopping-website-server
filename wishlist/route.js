@@ -19,9 +19,7 @@ const getOrCreateWishlist = async(ownerId) => {
     if (wishlist) {
         return wishlist;
     } else {
-        console.log(wishlist, 'did we find wl?')
         const newWishlist = await saveNewWishlist(ownerId);
-        console.log(newWishlist)
         return newWishlist
     }
 }
