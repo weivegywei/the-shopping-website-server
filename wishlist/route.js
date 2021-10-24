@@ -1,10 +1,4 @@
 import { Wishlist } from "./schema";
-//const { Wishlist } = require('./schema');
-
-/* type ListItemType = {
-    productId: string,
-    specificationValue: string
-} */
 
 const saveNewWishlist = async(ownerId) => {
     const wishlist = new Wishlist({
@@ -28,19 +22,20 @@ export const addWishlistItem = (app) => app.post('/api/wishlist/add', async(req,
     const { ownerId, productId, specificationValue } = req.body;
     const wishlist = await getOrCreateWishlist(ownerId);
     const newItem = { productId, specificationValue };
-    let listItemExist = null;
     if (!wishlist.listItems.length) {
         wishlist.listItems.push(newItem)
-    } else {
-        listItemExist = wishlist.listItems.find((item) => item.productId === productId && item.specificationValue === specificationValue);
-    }
-    wishlist.save();
-    if (listItemExist) {
-        return res.send("This item is already in the list")
-    } else {
-        wishlist.listItems.push(newItem)
+        wishlist.save();
         return res.json(wishlist)
-    }    
+    } else {
+        const listItemExist = wishlist.listItems.find((item) => item.productId === productId && item.specificationValue === specificationValue);
+        if (listItemExist) {
+            return res.send("This item is already in the list")
+        } else {
+            wishlist.listItems.push(newItem)
+            wishlist.save();
+            return res.json(wishlist)
+        }    
+    }
 })
 
 export const getWishlistItemNumber = (app) => app.post('/api/wishlist/number', async(req, res) => {
