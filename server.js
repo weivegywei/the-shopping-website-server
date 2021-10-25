@@ -4,7 +4,6 @@ const path = require('path');
 const app = express();
 const cors = require('cors')
 const mongoose = require('mongoose');
-const mongodbUrl = 'mongodb+srv://user_001:userPasswordForUser001@cluster0.cpgej.mongodb.net/ShoppingWebsite?retryWrites=true&w=majority';
 const { registerRoute, registerGuestRoute, checkGuestRoute } = require('./register/route');
 const { createProductRoute, adjustProductInventory} = require('./product/create/route');
 const { listProductRoute, deleteProductRoute } = require('./product/list/route');
@@ -24,6 +23,7 @@ const { getRuleBookRoute } = require('./rulebook/route');
 const { addWishlistItem, getWishlistItemNumber, getWishlistRoute, deleteListItem } = require('./wishlist/route');
 import { cleanGuestCartCron } from './cron';
 const nodemailer = require('nodemailer');
+require("dotenv").config();
 
 app.use(cors())
 
@@ -35,31 +35,31 @@ app.get('/', function (req, res) {
 
 app.listen(process.env.PORT || 80, () => {console.log('running my server on ', process.env.PORT)});
 
-mongoose.connect(mongodbUrl, {useNewUrlParser: true, useUnifiedTopology: true}).then(() => {
+mongoose.connect(process.env.MONGODB_URL, {useNewUrlParser: true, useUnifiedTopology: true}).then(() => {
     console.log("mongodb connected")
 });
 
- /* export const transporter = nodemailer.createTransport({
+ export const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
   port: 587,
   service: 'gmail',
   auth: {
-    user: 'myweishopofficial@gmail.com',
-    pass: 'uitpoomigognkbqe',
+    user: 'myweishopofficial000@gmail.com',
+    pass: process.env.EMAIL_TOKEN,
   },
 });
-transporter.verify().then(console.log).catch(console.error); */
+transporter.verify().then(console.log).catch(console.error);
 
-/* transporter.sendMail({
-  from: '"My Wei Shop" <myweishopofficial@gmail.com>', // sender address
-  to: "weivegy.wei@gmail.com, tica_bh@hotmail.com", // list of receivers
-  subject: "", // Subject line
-  text: "", // plain text body
-  html: "<b></b>", // html body
+transporter.sendMail({
+  from: '"My Wei Shop" <myweishopofficial000@gmail.com>', // sender address
+  to: "weivegy.wei@gmail.com", // list of receivers
+  subject: "you got mailed", // Subject line
+  text: "Your order has been shipped. Thank you for shopping with us!", // plain text body
+  html: "<b>Your order has been shipped.</b> Thank you for shopping with us!", // html body
 }).then(info => {
   console.log({info});
 }).catch(console.error);
- */
+
 cleanGuestCartCron.start();
 
 app.use(bodyParser.json());

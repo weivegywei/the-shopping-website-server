@@ -1,9 +1,10 @@
+require("dotenv").config();
 // In this file you can configure migrate-mongo
 
 const config = {
   mongodb: {
     // TODO Change (or review) the url to your MongoDB:
-    url: "mongodb+srv://user_001:userPasswordForUser001@cluster0.cpgej.mongodb.net/test?retryWrites=true&w=majority",
+    url: process.env.MONGODB_URL,
 
     // TODO Change this to your database name:
     databaseName: "ShoppingWebsite",
