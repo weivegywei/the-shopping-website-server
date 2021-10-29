@@ -1,7 +1,6 @@
 const crypto = require('crypto');
 const { User } = require('./schema');
 
-
 const saveNewUser = (_id, firstName, lastName, email, password, address, country, role, type) => {
     const newUser = new User({
         _id, 
@@ -39,7 +38,8 @@ export const registerGuestRoute = (app) => app.post('/api/guestregister', async(
     try {
         const { _id, firstName, lastName, email, address, country, role, type } = req.body;
         const existingMatch = await User.find({_id: req.body._id})
-        if (existingMatch) {
+        if (existingMatch.length) {
+            console.log(existingMatch, 'existingMatch')
             const updatedGuest = await User.updateOne(
                 {_id: req.body._id},
                 { $set: { 'firstName': firstName, 'lastName': lastName, 'email': email, 'address': address, 'country': country } }
@@ -72,11 +72,7 @@ export const registerGuestRoute = (app) => app.post('/api/guestregister', async(
 export const checkGuestRoute = (app) => app.post('/api/checkguest', async(req, res) => {
     try {
         const existingMatch = await User.find({_id: req.body._id})
-        if (existingMatch) {
-            return res.json(existingMatch)
-        } else {
-            return res.send('No matching user')
-        }
+        return res.json(existingMatch)
     }
     catch(error) {
         console.log('error in checking guest', error);

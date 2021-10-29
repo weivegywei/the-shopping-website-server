@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const paymentSchema = new mongoose.Schema({
-    userId: {type: mongoose.Types.ObjectId},
+    userId: {type: String},
     cartId: {type: mongoose.Types.ObjectId},
     orderId: {type: String, unique: true},
     payerId: {type: String, required: true},
@@ -15,7 +15,7 @@ const paymentSchema = new mongoose.Schema({
 
 export const Payment = mongoose.model('Payment', paymentSchema);
 
-const guestPaymentSchema = new mongoose.Schema({
+/* const guestPaymentSchema = new mongoose.Schema({
     guestId: {type: String},
     cartId: {type: mongoose.Types.ObjectId},
     orderId: {type: String, unique: true},
@@ -29,4 +29,4 @@ const guestPaymentSchema = new mongoose.Schema({
 {timestamps: true});
 
 export const GuestPayment = mongoose.model('GuestPayment', guestPaymentSchema);
-
+ */

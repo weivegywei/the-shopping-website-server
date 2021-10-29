@@ -1,8 +1,6 @@
 import { Payment } from "../paypal/paymentSchema";
-import { GuestPayment } from '../paypal/paymentSchema';
 import { Cart } from '../cart/schema';
-import { GuestCart } from '../guest/schema'
-import { transporter } from '../server'
+import { sendEmail } from '../notification/email'
 
 const mongoose = require('mongoose');
 
@@ -20,40 +18,9 @@ export const listOrderRoute = (app) => app.get('/api/admin/order/list', async(re
     return res.json(allPaymentsWithUserInfo);
 });
 
-export const listGuestOrderRoute = (app) => app.get('/api/admin/guestorder/list', async(req, res) => {
-    const allGuestPayments = await GuestPayment.find();
-    return res.json(allGuestPayments);
-});
-
 export const getOrderInfoRoute = (app) => app.post('/api/admin/order/info', async(req, res) => {
-    let order, orderWithProductInfo;
-    if (req.body.guestId) {
-        order = await GuestCart.findOne({_id: req.body.cartId});
-        orderWithProductInfo = await GuestCart.aggregate([
-            { $match: { _id : mongoose.Types.ObjectId(req.body.cartId) } },
-            {
-                $addFields: {
-                    "cartItems.prodId": {
-                        $map: {
-                            input: "$cartItems",
-                            as: "r",
-                            in: { $toObjectId: "$$r.productId" }
-                        }
-                    },
-                }
-            },
-            {
-                $lookup: {
-                    from: 'products',
-                    localField: 'cartItems.prodId',
-                    foreignField: '_id',
-                    as: 'items'
-                }
-            }
-        ]).exec();
-    } else {
-        order = await Cart.findOne({_id: req.body.cartId});
-        orderWithProductInfo = await Cart.aggregate([
+    const order = await Cart.findOne({_id: req.body.cartId});
+    const orderWithProductInfo = await Cart.aggregate([
         { $match: { _id : mongoose.Types.ObjectId(req.body.cartId) } },
         {
             $addFields: {
@@ -75,7 +42,7 @@ export const getOrderInfoRoute = (app) => app.post('/api/admin/order/info', asyn
             }
         }
     ]).exec();
-    }
+    
     const orderItems = order.cartItems;
     const orderItemsInfo = orderWithProductInfo[0].items;
     const orderInfo = orderItems.map(item => (
@@ -85,36 +52,22 @@ export const getOrderInfoRoute = (app) => app.post('/api/admin/order/info', asyn
 })
 
 export const editOrderStatusRoute = (app) => app.post('/api/admin/order/edit', async(req, res) => {
-    const newEventObject = {'status': req.body.status, 'time': new Date()};
-    if (req.body.guestId) {
-        const guestPaymentUpdate = await GuestPayment.updateOne(
-            { _id: req.body.id },
-            { $set: { 'status': req.body.status } }
+    const newEventObject = {status: req.body.status, time: new Date()};
+    const paymentUpdated = await Payment.updateOne(
+        { _id: req.body.id },
+        { $set: { 'status': req.body.status } }
         );
-        const guestPaymentObject = await GuestPayment.findOne({_id: req.body.id});
-        guestPaymentObject.events.push(newEventObject);
-        guestPaymentObject.save();
-        return res.send(guestPaymentObject)
-    } else {
-        const paymentUpdated = await Payment.updateOne(
-            { _id: req.body.id },
-            { $set: { 'status': req.body.status } }
-            );
-        const paymentObject = await Payment.findOne({_id: req.body.id});
-        paymentObject.events.push(newEventObject);
-        console.log(paymentObject.email, 'email')
-        paymentObject.save();
-        transporter.sendMail({
-            from: '"My Wei Shop" <myweishopofficial@gmail.com>', // sender address
-            to: `${paymentObject.email}, weivegy.wei@gmail.com`, // list of receivers
-            subject: `Your order has been ${req.body.status}`, // Subject line
-            text: `Your order has been ${req.body.status}, thank you for shopping with us.`, // plain text body
-            html: `<p>Your order has been <b>${req.body.status}</b>, thank you for shopping with us.</p>`, // html body
-          }).then(info => {
-            console.log({info});
-          }).catch(console.error);
-        return res.send(paymentObject);
-    }
+    const paymentObject = await Payment.findOne({_id: req.body.id});
+    paymentObject.events.push(newEventObject);
+    console.log(paymentObject.email, 'email')
+    paymentObject.save();
+    const emailAddress = paymentObject.email;
+    const orderId = paymentObject.orderId
+    const emailSubject = `Your order${orderId} has been ${req.body.status}`;
+    const emailMessage = `Your order${orderId} has been ${req.body.status}`;
+    const emailHTML = `<p>Your order${orderId} has been <b>${req.body.status}</b></p>`
+    sendEmail(emailAddress, emailSubject, emailMessage, emailHTML)
+    return res.send(paymentObject);
 });
 
 

@@ -11,12 +11,11 @@ const { homepageProductRoute } = require('./homepage/route');
 const { loginAuthenticationRoute } = require('./login/auth');
 const { getUserRoute } = require('./store/route');
 const { getCartRoute, addCartItem, deleteCartItem, getCartItemNumberRoute, changeItemNumber, changeCartStatus } = require('./cart/route');
-const { addGuestCartItem, getGuestCartItemNumberRoute, getGuestCartRoute, deleteGuestCartItem, changeGuestCartItemNumber, changeGuestCartStatus } = require('./guest/route');
 const { createManufacturerRoute } = require('./manufacturer/route');
 const { homepageProductSearchRoute } = require('./homepage/searchRoute');
 const { listFilteredProductRoute, getFiltersRoute, listMenuFilteredProductRoute } = require('./product/filter/route');
-const { paypalRoute, storePaymentRoute, storeGuestPaymentRoute } = require('./paypal/route');
-const { listOrderRoute, editOrderStatusRoute, getOrderInfoRoute, listGuestOrderRoute } = require('./order/route');
+const { paypalRoute, storePaymentRoute } = require('./paypal/route');
+const { listOrderRoute, editOrderStatusRoute, getOrderInfoRoute } = require('./order/route');
 const { editProductRoute } = require('./product/edit/route');
 const { fetchProductInfoRoute } = require('./product/page/route');
 const { getRuleBookRoute } = require('./rulebook/route');
@@ -39,7 +38,7 @@ mongoose.connect(process.env.MONGODB_URL, {useNewUrlParser: true, useUnifiedTopo
     console.log("mongodb connected")
 });
 
- export const transporter = nodemailer.createTransport({
+export const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
   port: 587,
   service: 'gmail',
@@ -50,17 +49,7 @@ mongoose.connect(process.env.MONGODB_URL, {useNewUrlParser: true, useUnifiedTopo
 });
 transporter.verify().then(console.log).catch(console.error);
 
-transporter.sendMail({
-  from: '"My Wei Shop" <myweishopofficial000@gmail.com>', // sender address
-  to: "weivegy.wei@gmail.com", // list of receivers
-  subject: "you got mailed", // Subject line
-  text: "Your order has been shipped. Thank you for shopping with us!", // plain text body
-  html: "<b>Your order has been shipped.</b> Thank you for shopping with us!", // html body
-}).then(info => {
-  console.log({info});
-}).catch(console.error);
-
-cleanGuestCartCron.start();
+//cleanGuestCartCron.start();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -116,22 +105,6 @@ editProductRoute(app);
 listMenuFilteredProductRoute(app);
 
 getRuleBookRoute(app);
-
-addGuestCartItem(app);
-
-getGuestCartItemNumberRoute(app);
-
-getGuestCartRoute(app);
-
-deleteGuestCartItem(app);
-
-changeGuestCartItemNumber(app);
-
-changeGuestCartStatus(app);
-
-storeGuestPaymentRoute(app);
-
-listGuestOrderRoute(app);
 
 addWishlistItem(app);
 

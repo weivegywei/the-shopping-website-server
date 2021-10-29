@@ -1,6 +1,6 @@
 const CronJob = require('cron').CronJob;
 const mongoose = require('mongoose');
-import { GuestCart } from "./guest/schema";
+import { Cart } from "./cart/schema";
 
 const getTargetDate = () => {
     let currentDate = new Date();
@@ -18,12 +18,12 @@ const objectIdWithTimestamp = (timestamp) => {
     return constructedObjectId
 }
 
-const clearOutdatedGuestCart = async() => {
+const clearOutdatedCart = async() => {
     try {
         const tgDate = getTargetDate();
         console.log(tgDate, 'targetDate')
-        const outdatedCart = await GuestCart.find({status: 'active', createdAt: { $lte: new Date(tgDate)}});
-        const clearGuestCart = await GuestCart.deleteMany({status: 'active', _id: {"$lt": objectIdWithTimestamp(targetDate)}});
+        const outdatedCart = await Cart.find({status: 'active', createdAt: { $lte: new Date(tgDate)}});
+        const clearGuestCart = await Cart.deleteMany({status: 'active', _id: {"$lt": objectIdWithTimestamp(targetDate)}});
         return console.log(outdatedCart, 'outdatedCart');
     } catch (error) {
         console.log('error', error)
