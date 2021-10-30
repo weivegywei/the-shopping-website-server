@@ -1,8 +1,6 @@
 import request from 'request-promise';
 import { Cart } from '../cart/schema';
-//import { GuestCart } from '../guest/schema'
 import { Payment } from './paymentSchema';
-//import { GuestPayment } from './paymentSchema';
 import { User } from '../register/schema';
 import { sendEmail } from '../notification/email'
 require("dotenv").config();

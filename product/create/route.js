@@ -1,5 +1,4 @@
 import { Cart } from '../../cart/schema';
-import { GuestCart } from '../../guest/schema'
 import { Manufacturer } from '../../manufacturer/schema';
 const { Product } = require('./schema');
 const mongoose = require('mongoose');
@@ -39,12 +38,7 @@ export const createProductRoute = (app) => app.post('/api/admin/product/create',
 });
 
 export const adjustProductInventory = (app) => app.post('/api/admin/product/inventory', async(req, res) => {
-    let userCart;
-    if (req.body.userId) {
-        userCart = await Cart.findOne({userId: req.body.userId, status: 'active'});
-    } else if (req.body.guestId) {
-        userCart = await GuestCart.findOne({guestId: req.body.guestId, status: 'active'})
-    }
+    const userCart = await Cart.findOne({userId: req.body.userId ? req.body.userId : req.body.guestId, status: 'active'});
     const cartItemsIds = userCart.cartItems.map(item => mongoose.Types.ObjectId(item.productId));
     const products = await Product.find( { '_id': { $in: cartItemsIds } } );
     products.map((item) => {
