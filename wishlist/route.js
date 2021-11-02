@@ -82,10 +82,12 @@ export const getWishlistRoute = (app) => app.post('/api/wishlist/get', async(req
     }
 })
 
-export const deleteListItem = (app) => app.post('/api/wishlist/delete', async(req, res) => {
+export const deleteWishlistItem = (app) => app.post('/api/wishlist/delete', async(req, res) => {
+    console.log(req.body, 'reqbody')
     const wishlist = await Wishlist.updateOne(
         { ownerId: req.body.ownerId },
-        { $pull: { listItems: { _id: req.body.listItemId } } }
+        { $pull: { listItems: { _id: req.body.wishlistItemId } } }
       );
+      console.log(wishlist, 'wishlist')
     return res.send('Item deleted')
 });

@@ -4,7 +4,7 @@ const path = require('path');
 const app = express();
 const cors = require('cors')
 const mongoose = require('mongoose');
-const { registerRoute, registerGuestRoute, checkGuestRoute } = require('./register/route');
+const { registerRoute, registerGuestRoute, checkGuestRoute, checkUserRoute } = require('./register/route');
 const { createProductRoute, adjustProductInventory} = require('./product/create/route');
 const { listProductRoute, deleteProductRoute } = require('./product/list/route');
 const { homepageProductRoute } = require('./homepage/route');
@@ -19,8 +19,8 @@ const { listOrderRoute, editOrderStatusRoute, getOrderInfoRoute } = require('./o
 const { editProductRoute } = require('./product/edit/route');
 const { fetchProductInfoRoute } = require('./product/page/route');
 const { getRuleBookRoute } = require('./rulebook/route');
-const { addWishlistItem, getWishlistItemNumber, getWishlistRoute, deleteListItem } = require('./wishlist/route');
-import { cleanGuestCartCron } from './cron';
+const { addWishlistItem, getWishlistItemNumber, getWishlistRoute, deleteWishlistItem } = require('./wishlist/route');
+//import { cleanGuestCartCron } from './cron';
 const nodemailer = require('nodemailer');
 require("dotenv").config();
 
@@ -112,10 +112,12 @@ getWishlistItemNumber(app);
 
 getWishlistRoute(app);
 
-deleteListItem(app);
+deleteWishlistItem(app);
 
 registerGuestRoute(app);
 
 fetchProductInfoRoute(app);
 
 checkGuestRoute(app);
+
+checkUserRoute(app);

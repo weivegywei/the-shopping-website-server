@@ -1,7 +1,7 @@
 const crypto = require('crypto');
 const { User } = require('./schema');
 
-const saveNewUser = (_id, firstName, lastName, email, password, address, country, role, type) => {
+const saveNewUser = (_id, firstName, lastName, email, password, address, country, role, type, status) => {
     const newUser = new User({
         _id, 
         firstName,
@@ -11,17 +11,27 @@ const saveNewUser = (_id, firstName, lastName, email, password, address, country
         address,
         country,
         role,
-        type
+        type, 
+        status
     });
     return newUser.save()
 }
 
 export const registerRoute = (app) => app.post('/api/register', async(req, res) => {
     try {
-    const { _id, firstName, lastName, email, address, password, country, role, type } = req.body;
+    const { _id, firstName, lastName, email, address, password, country, role, type, status } = req.body;
+    const existingGuestMatch = await User.find({email, role: 'customer', type: 'guest'});
+    if (existingGuestMatch) {
+        console.log(existingGuestMatch, 'matched guest user');
+        const updateGuestStatus = await User.updateOne(
+            {email, role: 'customer', type: 'guest'},
+            { $set: { 'status': 'inactive' } }
+        )
+        console.log(updateGuestStatus, 'updateGuestStatus')
+    }
     const hashedPassword = crypto.createHash('md5').update(password).digest('hex');
     const UserObject = await saveNewUser( _id, firstName, lastName, email, hashedPassword, address, 
-        country, role, type );
+        country, role, type, status );
     return res.json(UserObject)
     }
     catch(error) {
@@ -36,7 +46,7 @@ export const registerRoute = (app) => app.post('/api/register', async(req, res) 
 
 export const registerGuestRoute = (app) => app.post('/api/guestregister', async(req, res) => {
     try {
-        const { _id, firstName, lastName, email, address, country, role, type } = req.body;
+        const { _id, firstName, lastName, email, address, country, role, type, status } = req.body;
         const existingMatch = await User.find({_id: req.body._id})
         if (existingMatch.length) {
             console.log(existingMatch, 'existingMatch')
@@ -55,7 +65,8 @@ export const registerGuestRoute = (app) => app.post('/api/guestregister', async(
                 address,
                 country,
                 role,
-                type
+                type, 
+                status
             });
             console.log('newuser', newUser);
             newUser.save()
@@ -81,3 +92,19 @@ export const checkGuestRoute = (app) => app.post('/api/checkguest', async(req, r
     }
 })
 
+export const checkUserRoute = (app) => app.post('/api/checkuser', async(req, res) => {
+    try {
+        const existingMatch = await User.find({email: req.body.email, type: 'regular'})
+        if (existingMatch.length) {
+            return res.send('This email has been registered.')
+        } else {
+            console.log('no such user')
+            return res.send('no match.')
+        }
+    }
+    catch (error) {
+        console.log('error in checking user', error);
+        res.status(400);
+        return res.json({error})
+    }
+})
