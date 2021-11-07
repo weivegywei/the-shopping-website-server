@@ -1,5 +1,6 @@
 import { Payment } from "../paypal/paymentSchema";
 import { Cart } from '../cart/schema';
+import { User } from '../register/schema'
 import { sendEmail } from '../notification/email'
 
 const mongoose = require('mongoose');
@@ -42,7 +43,6 @@ export const getOrderInfoRoute = (app) => app.post('/api/admin/order/info', asyn
             }
         }
     ]).exec();
-    
     const orderItems = order.cartItems;
     const orderItemsInfo = orderWithProductInfo[0].items;
     const orderInfo = orderItems.map(item => (
@@ -59,13 +59,13 @@ export const editOrderStatusRoute = (app) => app.post('/api/admin/order/edit', a
         );
     const paymentObject = await Payment.findOne({_id: req.body.id});
     paymentObject.events.push(newEventObject);
-    console.log(paymentObject.email, 'email')
     paymentObject.save();
-    const emailAddress = paymentObject.email;
+    const user = await User.findOne({_id: paymentObject.userId})
+    const emailAddress = user.email;
     const orderId = paymentObject.orderId
     const emailSubject = `Your order${orderId} has been ${req.body.status}`;
-    const emailMessage = `Your order${orderId} has been ${req.body.status}`;
-    const emailHTML = `<p>Your order${orderId} has been <b>${req.body.status}</b></p>`
+    const emailMessage = `Your order${orderId} has been ${req.body.status}.`;
+    const emailHTML = `<p>Your order${orderId} has been <b>${req.body.status}</b>.</p>`
     sendEmail(emailAddress, emailSubject, emailMessage, emailHTML)
     return res.send(paymentObject);
 });
